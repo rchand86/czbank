@@ -1,0 +1,20 @@
+spring.application.name: czbank
+server:
+  port: 9090
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/dev
+    username: root
+    password: Admin@123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: app.log
+    path: /Users/ravi/Downloads/czbank/app.log
+
