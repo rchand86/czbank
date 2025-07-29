@@ -1,6 +1,7 @@
 package com.cz.bank.czbank;
 
 import com.cz.bank.czbank.controller.RatingController;
+import com.cz.bank.czbank.exception.InvalidInputException;
 import com.cz.bank.czbank.model.CreditRating;
 import com.cz.bank.czbank.model.Customer;
 import com.cz.bank.czbank.service.RatingService;
@@ -22,29 +23,47 @@ class RatingControllerTest {
     @InjectMocks
     private RatingController ratingController;
 
+
     @Test
-    void testGetCustomerDetailsByCusIdCusRating() {
-        // Arrange
+    void testGetCustomerDetailsByCusIdCusRating1() {
         Long customerId = 1L;
         String customerRating = "A";
+        String cusRating = "A";
 
         Customer customer = new Customer();
         customer.setCustomerId(customerId);
-        customer.setEmail("test@example.com");
-        customer.setMobileNumber("1234567890");
 
         CreditRating creditRating = new CreditRating();
         creditRating.setCustomer(customer);
-        creditRating.setCustomerRating(customerRating);
-        creditRating.setInterestRate(7.5);
+        creditRating.setCustomerRating(cusRating);
 
-        Mockito.when(ratingService.retrieveCustomerRating(customerId, customerRating)).thenReturn(creditRating);
+        Mockito.when(ratingService.retrieveCustomerRating(customerRating)).thenReturn(cusRating);
+        Mockito.when(ratingService.retrieveCustomerRating(customerId, cusRating)).thenReturn(creditRating);
 
-        // Act
         ResponseEntity<CreditRating> response = ratingController.getCustomerDetailsByCusIdCusRating(customerId, customerRating);
 
-        // Assert
         Assertions.assertEquals(200, response.getStatusCode().value());
-        Assertions.assertEquals(response.getBody().getCustomerRating(), customerRating);
+        Assertions.assertEquals(cusRating, response.getBody().getCustomerRating());
+        Assertions.assertEquals(customerId, response.getBody().getCustomer().getCustomerId());
     }
+
+    @Test
+    void testGetCustomerDetailsByCusIdCusRating_InvalidInput_NegativeId() {
+        InvalidInputException exception = Assertions.assertThrows(
+                InvalidInputException.class,
+                () -> ratingController.getCustomerDetailsByCusIdCusRating(0L, "A")
+        );
+        Assertions.assertEquals("CustomerId/CustomerRating should not be Empty/Blank", exception.getMessage());
+    }
+
+    @Test
+    void testGetCustomerDetailsByCusIdCusRating_InvalidInput_BlankRating() {
+        InvalidInputException exception = Assertions.assertThrows(
+                InvalidInputException.class,
+                () -> ratingController.getCustomerDetailsByCusIdCusRating(1L, " ")
+        );
+        Assertions.assertEquals("CustomerId/CustomerRating should not be Empty/Blank", exception.getMessage());
+    }
+
 }
+

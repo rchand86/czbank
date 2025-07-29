@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -40,12 +42,13 @@ public class RatingService {
         Customer customer = retrieveCustomer(customerId,customerRating);
         CreditRating creditRating;
         if(customer != null){
+            //Assume Third party service and get the interest rate based on the customer rating
             double interestRate = getInterestRate(customerRating);
             LOGGER.info("Interest Rate for customer {} Interest Rate is {}", customer.getCustomerId(), interestRate);
             creditRating = saveCreditRating(customerRating, customer, interestRate);
         }else{
-            LOGGER.error("Validation failed : CustomerId/CustomerRating should not be Empty/Blank");
-            throw new InvalidInputException("CustomerId/CustomerRating should not be Empty/Blank");
+            LOGGER.error("Validation failed : Customer not exist in DB");
+            throw new InvalidInputException("Customer not exist in DB");
         }
         return creditRating;
     }
@@ -59,6 +62,11 @@ public class RatingService {
     public double getInterestRate(String rating) {
         CreditRatingEnum creditRating = CreditRatingEnum.from(rating);
         return creditRating != null ? creditRating.getInterestRate() : 13.0;
+    }
+
+    public String retrieveCustomerRating(String rating) {
+        Map<String,String> ratingmap = getInterestRateMap();
+        return ratingmap.getOrDefault(rating.toUpperCase(), "Unknown Rating");
     }
 
     private CreditRating saveCreditRating(String rating, Customer customer, double interestRate) {
@@ -76,9 +84,18 @@ public class RatingService {
     private Customer retrieveCustomer(Long customerId, String customerRating) {
         Optional<Customer> customer = customerRepo.findById(customerId);
         if(!StringUtils.hasLength(customerRating) || customer.isEmpty()){
-            LOGGER.error("CustomerId/CustomerRating should not be Empty/Blank");
+            LOGGER.error("No customer found with ID: {} or CustomerRating is empty", customerId);
             return null;
         }
         return customer.get();
+    }
+
+    private Map<String, String> getInterestRateMap() {
+        HashMap<String,String> ratingMap = new HashMap<>();
+        ratingMap.put("EXCELLENT", "A");
+        ratingMap.put("GOOD", "B");
+        ratingMap.put("AVERAGE", "C");
+        ratingMap.put("POOR", "D");
+        return ratingMap;
     }
 }

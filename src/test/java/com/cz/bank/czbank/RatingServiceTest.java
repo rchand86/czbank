@@ -76,4 +76,19 @@ class RatingServiceTest {
 
         assertEquals(13.0, rate);
     }
+
+    @Test
+    void testRetrieveCustomerRating_KnownRatings() {
+        assertEquals("A", ratingService.retrieveCustomerRating("EXCELLENT"));
+        assertEquals("B", ratingService.retrieveCustomerRating("GOOD"));
+        assertEquals("C", ratingService.retrieveCustomerRating("AVERAGE"));
+        assertEquals("D", ratingService.retrieveCustomerRating("POOR"));
+    }
+
+    @Test
+    void testRetrieveCustomerRating_UnknownRating() {
+        assertEquals("Unknown Rating", ratingService.retrieveCustomerRating("BAD"));
+        assertEquals("Unknown Rating", ratingService.retrieveCustomerRating(""));
+        assertEquals("Unknown Rating", ratingService.retrieveCustomerRating("xyz"));
+    }
 }
