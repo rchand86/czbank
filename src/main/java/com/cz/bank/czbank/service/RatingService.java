@@ -47,8 +47,8 @@ public class RatingService {
             LOGGER.info("Interest Rate for customer {} Interest Rate is {}", customer.getCustomerId(), interestRate);
             creditRating = saveCreditRating(customerRating, customer, interestRate);
         }else{
-            LOGGER.error("Validation failed : Customer not exist in DB");
-            throw new InvalidInputException("Customer not exist in DB");
+            LOGGER.error("Validation failed : Customer does not exist in the database.");
+            throw new InvalidInputException("Customer does not exist in the database.");
         }
         return creditRating;
     }

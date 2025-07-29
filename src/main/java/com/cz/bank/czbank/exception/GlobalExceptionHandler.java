@@ -17,10 +17,10 @@ import java.util.Map;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 
     @ExceptionHandler(InvalidInputException.class)
-    public ResponseEntity<String> invalidInput(InvalidInputException exception){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    public ResponseEntity<ErrorResponse> invalidInput(InvalidInputException exception){
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
-
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
