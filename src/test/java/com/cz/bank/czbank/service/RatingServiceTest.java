@@ -1,4 +1,4 @@
-package com.cz.bank.czbank;
+package com.cz.bank.czbank.service;
 
 import com.cz.bank.czbank.exception.InvalidInputException;
 import com.cz.bank.czbank.model.CreditRating;
@@ -6,7 +6,6 @@ import com.cz.bank.czbank.model.CreditRatingEnum;
 import com.cz.bank.czbank.model.Customer;
 import com.cz.bank.czbank.repo.CreditRatingRepo;
 import com.cz.bank.czbank.repo.CustomerRepo;
-import com.cz.bank.czbank.service.RatingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

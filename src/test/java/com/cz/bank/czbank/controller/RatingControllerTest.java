@@ -1,6 +1,5 @@
-package com.cz.bank.czbank;
+package com.cz.bank.czbank.controller;
 
-import com.cz.bank.czbank.controller.RatingController;
 import com.cz.bank.czbank.exception.InvalidInputException;
 import com.cz.bank.czbank.model.CreditRating;
 import com.cz.bank.czbank.model.Customer;
